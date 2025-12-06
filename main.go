@@ -118,7 +118,6 @@ func main() {
 			return c.Send(
 				fmt.Sprintf("Ууупс... что-то пошло не так: %v", err))
 		}
-		fmt.Println(result.Count)
 		return c.Send(
 			fmt.Sprintf("Твоя ЗП на текущий момент: %v", result.Count*1500+(int64(result.Sum.Float64*0.04))))
 	})
