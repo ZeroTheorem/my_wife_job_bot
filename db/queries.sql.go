@@ -32,6 +32,24 @@ func (q *Queries) CreateRow(ctx context.Context, arg CreateRowParams) error {
 	return err
 }
 
+const deleteLastRow = `-- name: DeleteLastRow :one
+DELETE FROM notes
+WHERE id = (SELECT MAX(id) from notes)
+RETURNING name, val
+`
+
+type DeleteLastRowRow struct {
+	Name string
+	Val  int64
+}
+
+func (q *Queries) DeleteLastRow(ctx context.Context) (DeleteLastRowRow, error) {
+	row := q.db.QueryRowContext(ctx, deleteLastRow)
+	var i DeleteLastRowRow
+	err := row.Scan(&i.Name, &i.Val)
+	return i, err
+}
+
 const getAvg = `-- name: GetAvg :one
 SELECT AVG(val) FROM notes
 WHERE name = ? AND month = ? AND year = ?
