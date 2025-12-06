@@ -69,11 +69,9 @@ func (q *Queries) GetAvg(ctx context.Context, arg GetAvgParams) (sql.NullFloat64
 }
 
 const getMonthlyTotal = `-- name: GetMonthlyTotal :one
-= ?;
-
-SELECT SUM(val) from notes
-WHERE month = ?
-AND yea
+SELECT SUM(val)
+FROM notes
+WHERE month = ? AND year = ?
 `
 
 type GetMonthlyTotalParams struct {
@@ -89,13 +87,13 @@ func (q *Queries) GetMonthlyTotal(ctx context.Context, arg GetMonthlyTotalParams
 }
 
 const getWifeSalary = `-- name: GetWifeSalary :one
-SELECT COUNT(*), SUM(val) from notes
-WHERE name = 'алена'
-AND month = ?
-AND yea
+SELECT COUNT(*), SUM(val)
+FROM notes
+WHERE name = ? AND month = ? AND year = ?
 `
 
 type GetWifeSalaryParams struct {
+	Name  string
 	Month int64
 	Year  int64
 }
@@ -106,7 +104,7 @@ type GetWifeSalaryRow struct {
 }
 
 func (q *Queries) GetWifeSalary(ctx context.Context, arg GetWifeSalaryParams) (GetWifeSalaryRow, error) {
-	row := q.db.QueryRowContext(ctx, getWifeSalary, arg.Month, arg.Year)
+	row := q.db.QueryRowContext(ctx, getWifeSalary, arg.Name, arg.Month, arg.Year)
 	var i GetWifeSalaryRow
 	err := row.Scan(&i.Count, &i.Sum)
 	return i, err

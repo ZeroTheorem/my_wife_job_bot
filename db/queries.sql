@@ -12,12 +12,11 @@ WHERE id = (SELECT MAX(id) from notes)
 RETURNING name, val;
 
 -- name: GetWifeSalary :one
-SELECT COUNT(*), SUM(val) from notes
-WHERE name = 'алена'
-AND month = ?
-AND year = ?;
+SELECT COUNT(*), SUM(val)
+FROM notes
+WHERE name = ? AND month = ? AND year = ?;
 
 -- name: GetMonthlyTotal :one
-SELECT SUM(val) from notes
-WHERE month = ?
-AND year = ?;
+SELECT SUM(val)
+FROM notes
+WHERE month = ? AND year = ?;

@@ -96,7 +96,7 @@ func main() {
 				fmt.Sprintf("Ууупс... что-то пошло не так: %v", err))
 		}
 		avgAlena, err := q.GetAvg(ctx, db.GetAvgParams{
-			Name:  "даша",
+			Name:  "алена",
 			Month: int64(time.Now().Month()),
 			Year:  int64(time.Now().Year()),
 		})
@@ -110,6 +110,7 @@ func main() {
 
 	b.Handle("/mysalary", func(c tele.Context) error {
 		result, err := q.GetWifeSalary(ctx, db.GetWifeSalaryParams{
+			Name:  "алена",
 			Month: int64(time.Now().Month()),
 			Year:  int64(time.Now().Year()),
 		})
@@ -117,6 +118,7 @@ func main() {
 			return c.Send(
 				fmt.Sprintf("Ууупс... что-то пошло не так: %v", err))
 		}
+		fmt.Println(result.Count)
 		return c.Send(
 			fmt.Sprintf("Твоя ЗП на текущий момент: %v", result.Count*1500+(int64(result.Sum.Float64*0.04))))
 	})
@@ -130,7 +132,7 @@ func main() {
 			return c.Send(
 				fmt.Sprintf("Ууупс... что-то пошло не так: %v", err))
 		}
-		return c.Send("Всего в этом месяце: %.1f", r.Float64)
+		return c.Send(fmt.Sprintf("Всего в этом месяце: %.1f", r.Float64))
 
 	})
 	b.Start()
